@@ -22,11 +22,11 @@
           <el-button @click="resetForm('ruleForm2')">Reset</el-button>
         </el-form-item>
     </el-form>
-    {{info}}
   </div>
 </template>
 
 <script>
+import User from './User'
 export default {
   data () {
     const validatePass = (rule, value, callback) => {
@@ -38,7 +38,11 @@ export default {
     }
 
     return {
-      body: '',
+      userBody: {
+        'pageNumber': 0,
+        'pageSize': 10
+      },
+      users: [],
       info: '',
       ruleForm2: {
         login: '',
@@ -55,8 +59,18 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('https://sandbox.sdk.finance/api/v1/authorization',this.ruleForm2)
-            .then(response => (this.info = response.data.authorizationToken.token))
+          axios.post('https://sandbox.sdk.finance/api/v1/authorization', this.ruleForm2)
+            .then(response => {
+              this.info = response.data.authorizationToken.token
+              const HTTP = axios.create({
+                baseURL: `https://sandbox.sdk.finance/`,
+                headers: {
+                  Authorization: 'TOKEN ' + this.info
+                }
+              })
+              HTTP.post(`api/v1/users/view`, this.userBody)
+                .then(response => (this.$store.state.users = response.data.records, this.$router.push('/user')))
+            })
         } else {
           return false
         }
@@ -66,12 +80,8 @@ export default {
       this.$refs[formName].resetFields()
     }
   },
-  computed: {
-    f: {
-      'pageNumber': 0,
-      'pageSize': 10,
-      'token': this.info
-    },
+  components: {
+    appUser: User
   }
 }
 

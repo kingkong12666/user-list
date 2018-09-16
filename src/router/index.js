@@ -4,7 +4,6 @@ import Authorization from '@/components/Authorization'
 import User from '@/components/User'
 
 Vue.use(Router)
-
 export default new Router({
   routes: [
     {

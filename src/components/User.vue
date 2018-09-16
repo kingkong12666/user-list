@@ -1,57 +1,40 @@
+
 <template>
   <el-table
-    :data="tableData"
+    :data="responseUser"
     style="width: 100%">
-    <el-table-column
-      prop="date"
-      label="Date"
-      width="180">
-    </el-table-column>
     <el-table-column
       prop="name"
       label="Name"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="address"
-      label="Address">
+      prop="contact.email"
+      label="Email"
+      width="180">
     </el-table-column>
-    <div>{{info}}</div>
+    <el-table-column
+      prop="contact.phoneNumber"
+      label="Phone">
+    </el-table-column>
+    <el-table-column
+      prop="contact.countryCode"
+      label="Country code">
+    </el-table-column>
+    <el-table-column
+      prop="createdAt"
+      label="Create at">
+    </el-table-column>
   </el-table>
 </template>
 
 <script>
+
 export default {
-  data () {
-    return {
-      tableData: [{
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }],
-      body: {
-        'pageNumber': 0,
-        'pageSize': 10
-      },
-      info: null
+  computed: {
+    responseUser () {
+      return this.$store.state.users
     }
-  },
-  mounted () {
-    axios
-      .post('https://sandbox.sdk.finance/api/v1/users/view', this.body)
-      .then(response => (this.info = response));
   }
 }
 </script>
